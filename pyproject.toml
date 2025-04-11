@@ -1,0 +1,14 @@
+[project]
+name = "django-channels-messaging"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "channels-redis>=4.2.1",
+  "channels[daphne]>=4.2.2",
+  "django==4.2",
+  "django-cors-headers>=4.7.0",
+  "django-structlog>=9.1.1",
+  "djangorestframework>=3.16.0",
+]
