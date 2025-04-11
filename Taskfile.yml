@@ -1,0 +1,11 @@
+version: "3"
+
+tasks:
+  dev:backend: python manage.py runserver
+
+  dev:frontend:
+    dir: frontend
+    cmd: npm run dev
+
+  start:client-website:
+    cmd: python -m http.server 3000
