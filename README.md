@@ -1,17 +1,13 @@
 ### Requirements:
 - `python 3.11`
-- `uv`
+- `uv`/`poetry`
 - (Optional)[Taskfile](https://taskfile.dev)
 
-### How to setup:
-Create a virtual env with uv venv .venv --python=3.11
+### How the flow works
 
-
-You can run all the commands in parallel using 
-
-task -p "dev:frontend" "dev:backend" "start:client-website"
-
-and it will launch:
-- the backend running on port 8000
-- the frontend running on port 5173
-- the client website served via index.html on port 3000
+- Client generates a conversation id and connects to websocket consumer; waits for agent
+- in the meantime, this conversation id is stored into cache and added to the pool of available conversation ids
+- this client is added to a room of the said conversation id (room is automatically created with group)
+- Agent chooses a conversation id from a pool of ids
+- Agent joins the same room on connection
+- <chat> contains different types of messages - typing, chat etc
