@@ -19,10 +19,6 @@ async def chat_loop(role: str):
     async with websockets.connect(ws_url) as ws:
         print(f"[{role.upper()}] connected to {ws_url}")
 
-        # Optionally identify self
-        await ws.send(make_payload("identify", {"role": role}))
-        print(f"[{role.upper()}] sent identify")
-
         async def send_loop():
             while True:
                 msg = await asyncio.get_event_loop().run_in_executor(
