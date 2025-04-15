@@ -1,6 +1,7 @@
 # chat/consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 import structlog
+import json
 
 logger = structlog.get_logger(__name__)
 
@@ -29,7 +30,7 @@ class VisitorConsumer(AsyncWebsocketConsumer):
             f"WebSocket connection closed for conversation: {self.conversation_id}, code: {close_code}"
         )
 
-    async def receive_json(self, content, **kwargs):
+    async def receive(self, text_data):
         """
         Handles incoming JSON messages.
         Expects:
@@ -38,6 +39,7 @@ class VisitorConsumer(AsyncWebsocketConsumer):
             "content": { ... }
         }
         """
+        content = json.loads(text_data)
         msg_type = content.get("type")
         msg_content = content.get("content", {})
 
@@ -64,21 +66,25 @@ class VisitorConsumer(AsyncWebsocketConsumer):
 
     # Handlers for group messages
     async def chat_message(self, event):
-        await self.send_json(
-            {
-                "type": "chat.message",
-                "sender": event["sender"],
-                "message": event["message"],
-            }
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "chat.message",
+                    "sender": event["sender"],
+                    "message": event["message"],
+                }
+            )
         )
 
     async def typing_event(self, event):
-        await self.send_json({"type": "typing", "sender": event["sender"]})
+        await self.send(
+            text_data=json.dumps({"type": "typing", "sender": event["sender"]})
+        )
 
 
 class AgentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        logger.debug("VisitorConsumer.connect: Connection attempt started")
+        logger.debug("AgentConsumer.connect: Connection attempt started")
         self.conversation_id = self.scope["url_route"]["kwargs"]["conversation_id"]
         self.conversation_group_name = f"chat_{self.conversation_id}"
 
@@ -100,7 +106,7 @@ class AgentConsumer(AsyncWebsocketConsumer):
             f"WebSocket connection closed for conversation: {self.conversation_id}, code: {close_code}"
         )
 
-    async def receive_json(self, content, **kwargs):
+    async def receive(self, text_data):
         """
         Handles incoming JSON messages.
         Expects:
@@ -109,6 +115,7 @@ class AgentConsumer(AsyncWebsocketConsumer):
             "content": { ... }
         }
         """
+        content = json.loads(text_data)
         msg_type = content.get("type")
         msg_content = content.get("content", {})
 
@@ -119,7 +126,7 @@ class AgentConsumer(AsyncWebsocketConsumer):
                 self.conversation_group_name,
                 {
                     "type": "chat_message",
-                    "sender": "visitor",
+                    "sender": "agent",  # Changed from "visitor" to "agent"
                     "message": msg_content.get("message", ""),
                 },
             )
@@ -134,13 +141,17 @@ class AgentConsumer(AsyncWebsocketConsumer):
 
     # Handlers for group messages
     async def chat_message(self, event):
-        await self.send_json(
-            {
-                "type": "chat.message",
-                "sender": event["sender"],
-                "message": event["message"],
-            }
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "chat.message",
+                    "sender": event["sender"],
+                    "message": event["message"],
+                }
+            )
         )
 
     async def typing_event(self, event):
-        await self.send_json({"type": "typing", "sender": event["sender"]})
+        await self.send(
+            text_data=json.dumps({"type": "typing", "sender": event["sender"]})
+        )
