@@ -5,8 +5,9 @@ import websockets
 import json
 import sys
 
-# Customize this URL as needed
-SERVER_URL = "ws://localhost:8000/ws/chat/room_id/"
+# Constants
+BASE_WS_URL = "ws://localhost:8000/ws/chat"
+CONVERSATION_ID = "test_conv_id"  # Hardcoded conversation ID
 
 
 def make_payload(event_type, content=None):
@@ -14,10 +15,11 @@ def make_payload(event_type, content=None):
 
 
 async def chat_loop(role: str):
-    async with websockets.connect(SERVER_URL) as ws:
-        print(f"[{role.upper()}] connected to {SERVER_URL}")
+    ws_url = f"{BASE_WS_URL}/{role}/{CONVERSATION_ID}/"
+    async with websockets.connect(ws_url) as ws:
+        print(f"[{role.upper()}] connected to {ws_url}")
 
-        # Identify self
+        # Optionally identify self
         await ws.send(make_payload("identify", {"role": role}))
         print(f"[{role.upper()}] sent identify")
 
