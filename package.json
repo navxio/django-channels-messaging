@@ -1,0 +1,23 @@
+{
+  "name": "django-channels-messaging",
+  "version": "1.0.0",
+  "description": "client demo for django channels messaging",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/navxio/django-channels-messaging.git"
+  },
+  "keywords": [],
+  "author": "Navdeep Saini",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/navxio/django-channels-messaging/issues"
+  },
+  "homepage": "https://github.com/navxio/django-channels-messaging#readme",
+  "dependencies": {
+    "ws": "^8.18.1"
+  }
+}
