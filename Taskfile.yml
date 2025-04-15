@@ -6,6 +6,3 @@ tasks:
   dev:frontend:
     dir: frontend
     cmd: npm run dev
-
-  start:client-website:
-    cmd: python -m http.server 3000
