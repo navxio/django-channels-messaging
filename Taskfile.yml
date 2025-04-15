@@ -3,6 +3,8 @@ version: "3"
 tasks:
   dev:backend: python manage.py runserver
 
-  dev:frontend:
-    dir: frontend
-    cmd: npm run dev
+  start:visitor:
+    cmd: python chat_client.py --role visitor
+
+  start:agent:
+    cmd: python chat_client.py --role agent
