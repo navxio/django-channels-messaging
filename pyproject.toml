@@ -8,4 +8,5 @@ dependencies = [
   "channels[daphne]>=4.2.2",
   "django==4.2",
   "django-structlog>=9.1.1",
+  "websockets>=15.0.1",
 ]
