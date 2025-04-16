@@ -25,6 +25,9 @@ class VisitorConsumer(AsyncWebsocketConsumer):
         # add to conversation pool
         add_to_available_pool(self.conversation_id)
 
+        # optional - add persistent calls
+        # viz create a visitor instance (sync or async)
+
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(
@@ -58,6 +61,10 @@ class VisitorConsumer(AsyncWebsocketConsumer):
                     "message": msg_content.get("message", ""),
                 },
             )
+
+            # optional
+            # implement persistence functions
+            # viz creating a message / adding a message to a Conversation
 
         elif msg_type == "typing":
             await self.channel_layer.group_send(
@@ -104,6 +111,10 @@ class AgentConsumer(AsyncWebsocketConsumer):
         # remove this conversation from the pool
         remove_from_available_pool(self.conversation_id)
 
+        # optional
+        # implement persistent logic
+        # viz saving creating an Agent instance
+
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(
@@ -137,6 +148,11 @@ class AgentConsumer(AsyncWebsocketConsumer):
                     "message": msg_content.get("message", ""),
                 },
             )
+
+            # optional
+            # implement persistence implementation
+            # viz creating a message / adding a message to a conversation
+            # with read tags etc
 
         elif msg_type == "typing":
             await self.channel_layer.group_send(
