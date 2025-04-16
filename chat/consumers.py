@@ -2,6 +2,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import structlog
 import json
+from chat.utils import add_to_available_pool, remove_from_available_pool
 
 logger = structlog.get_logger(__name__)
 
@@ -20,6 +21,9 @@ class VisitorConsumer(AsyncWebsocketConsumer):
             f"WebSocket connection established for conversation: {self.conversation_id}"
         )
         await self.accept()
+
+        # add to conversation pool
+        add_to_available_pool(self.conversation_id)
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -96,6 +100,9 @@ class AgentConsumer(AsyncWebsocketConsumer):
             f"WebSocket connection established for conversation: {self.conversation_id}"
         )
         await self.accept()
+
+        # remove this conversation from the pool
+        remove_from_available_pool(self.conversation_id)
 
     async def disconnect(self, close_code):
         # Leave room group
