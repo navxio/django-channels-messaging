@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant VisitorClient
+    participant VisitorConsumer
+    participant ChannelLayer
+    participant AgentConsumer
+    participant AgentClient
+
+    VisitorClient->>VisitorConsumer: WebSocket message (chat.message)
+    VisitorConsumer->>ChannelLayer: group_send("chat_<id>", {...})
+    ChannelLayer->>VisitorConsumer: invoke chat_message(event)
+    ChannelLayer->>AgentConsumer: invoke chat_message(event)
+    VisitorConsumer->>VisitorClient: send(event as JSON)
+    AgentConsumer->>AgentClient: send(event as JSON)
